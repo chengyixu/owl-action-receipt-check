@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <base target="_top">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Action Receipt Check — Klik Pre-Launch</title>
+    <style>
+      :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: #0d1220; color: #eef2ff; }
+      main { width: min(720px, calc(100% - 32px)); margin: 0 auto; padding: 56px 0 72px; }
+      .eyebrow { color: #8ab4ff; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+      h1 { font-size: clamp(2.05rem, 6vw, 3.7rem); letter-spacing: -0.055em; line-height: 1; margin: 14px 0 20px; }
+      .lead { max-width: 62ch; color: #c4cddd; font-size: 1.1rem; line-height: 1.65; }
+      .card { margin-top: 32px; padding: 25px; border: 1px solid #34405e; border-radius: 20px; background: #161e31; box-shadow: 0 16px 50px rgba(0, 0, 0, 0.2); }
+      .rule { display: flex; gap: 13px; align-items: flex-start; padding: 15px 0; border-top: 1px solid #2a3550; cursor: pointer; line-height: 1.45; }
+      .rule:first-of-type { border-top: 0; }
+      input { width: 20px; height: 20px; margin: 1px 0 0; accent-color: #8ab4ff; flex: 0 0 auto; }
+      .rule strong { display: block; color: #fff; }
+      .rule span { display: block; margin-top: 3px; color: #afbbd0; font-size: 0.93rem; }
+      button { width: 100%; border: 0; border-radius: 12px; margin-top: 22px; padding: 14px 18px; background: #9fc5ff; color: #07101f; cursor: pointer; font-size: 1rem; font-weight: 800; }
+      button:hover, button:focus-visible { background: #c4dcff; }
+      #result { min-height: 62px; margin: 18px 0 0; padding: 16px; border-radius: 12px; background: #0e1728; color: #d5dded; line-height: 1.5; }
+      #result[data-state="ready"] { color: #c1f6d2; background: #153226; }
+      #result[data-state="review"] { color: #ffe1a5; background: #352b16; }
+      .fine { margin-top: 28px; color: #94a2ba; font-size: 0.9rem; line-height: 1.55; }
+      a { color: #a9cbff; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="eyebrow">OWL Intelligence field tool</div>
+      <h1>Before an agent acts, keep the receipt.</h1>
+      <p class="lead">Use this quick check before restarting a proposed external step. It does not execute work or collect responses: it only helps you decide whether the next step is ready to prepare for review.</p>
+      <section class="card" aria-labelledby="check-heading">
+        <h2 id="check-heading">Action receipt check</h2>
+        <label class="rule"><input type="checkbox" data-check="evidence"><span><strong>Source is inspectable</strong>The material behind this step is available and identifiable.</span></label>
+        <label class="rule"><input type="checkbox" data-check="freshness"><span><strong>Context is fresh enough</strong>Nothing material changed since the last review.</span></label>
+        <label class="rule"><input type="checkbox" data-check="scope"><span><strong>Scope still matches</strong>The proposed next step is no broader than the reviewed request.</span></label>
+        <label class="rule"><input type="checkbox" data-check="authority"><span><strong>Authority is explicit</strong>The approval covers this exact step, not merely a related idea.</span></label>
+        <label class="rule"><input type="checkbox" data-check="outcome"><span><strong>Outcome is reviewable</strong>You can state what result or receipt should remain after the step.</span></label>
+        <label class="rule"><input type="checkbox" data-check="human"><span><strong>Human return is set</strong>New access, material judgment, and external commitments return to a person.</span></label>
+        <button type="button" id="check">Check readiness</button>
+        <div id="result" role="status" aria-live="polite">Mark every condition, then check readiness.</div>
+      </section>
+      <p class="fine">This is an educational checklist, not authorization, advice, or a product demo. Klik is pre-launch and explores an app-first proactive-AI direction: turning Sessions into living Context and helping prepare approved work while people retain new access, material judgment, and external commitments. <a href="https://pre.hiklik.ai/?utm_source=google_apps_script&utm_medium=interactive_mini_tool&utm_campaign=kickstarter_prelaunch&utm_content=action_receipt_check">Explore Klik’s pre-launch direction.</a></p>
+    </main>
+    <script>
+      const checks = Array.from(document.querySelectorAll('[data-check]'));
+      const result = document.getElementById('result');
+      document.getElementById('check').addEventListener('click', () => {
+        const missing = checks.filter((check) => !check.checked).length;
+        if (missing === 0) {
+          result.dataset.state = 'ready';
+          result.textContent = 'Ready to prepare a reviewable next step. This is not authorization to execute it; retain the receipt and return to a person when the action changes access, judgment, or commitments.';
+          return;
+        }
+        result.dataset.state = 'review';
+        result.textContent = `${missing} condition${missing === 1 ? '' : 's'} still need review. Pause, refresh the relevant Context, or return the action to a person before preparing the next step.`;
+      });
+    </script>
+  </body>
+</html>
